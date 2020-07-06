@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import axios from 'axios';
 
+
 import Display from "./components/Display.component"; //Imports the display component which displays the current inventory
 import MainInput from "./components/MainInput2.component";
 import MyNavbar from "./components/Navbar";
