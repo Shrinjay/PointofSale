@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {Container, Row, Col} from 'reactstrap';
 import App from "../App";
-import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
+
 
 export default class Display extends React.Component{ //Exports Display as the default class from this file so it is accessed from other files
   constructor(props){ 
