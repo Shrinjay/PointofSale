@@ -8,7 +8,7 @@ require('dotenv').config(); //Installs dotenv, which I don't even use.
 
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
-    pp.use('/static', express.static(path.join(__dirname, 'client/build')));
+    app.use('/static', express.static(path.join(__dirname, 'client/build')));
   
  
   }
