@@ -6,7 +6,9 @@ const mongoose = require('mongoose'); //Installs mongoose
 const cors = require('cors');  //Installs CORS
 require('dotenv').config(); //Installs dotenv, which I don't even use.
 
-
+const path = require('path');
+    app.use(express.static('client/build'));
+    
 const port = process.env.PORT || 3000 //This runs the server on port 3000, REVIEW SYNTAX.
 const uri = 'mongodb+srv://Shrinjay:sunny2002@shrinjay-rjqya.mongodb.net/<dbname>?retryWrites=true&w=majority' //URI to connect to mongoDB
 var mongoDB = process.env.MONGODB_URI||uri
@@ -30,13 +32,11 @@ app.use('/api/items', itemRouter); //Routes any requests at /items endpoint to t
 
 const tLogRouter = require('./transactionLog')
 app.use('/api/log', tLogRouter);
-if (process.env.NODE_ENV === 'production') {
-    // Exprees will serve up production assets
-    const path = require('path');
-    app.use(express.static('client/build'));
 
-    app.get('*', (req, res) => res.sendFile(path.resolve('client/build', 'index.html'));
-  }
+    
+
+    app.get('*', (req, res) => res.sendFile(path.resolve('client/build', 'index.html')));
+  
 
 app.listen(port, ()=>{ //Just verification to make sure the server works 
     console.log("Server Works");
