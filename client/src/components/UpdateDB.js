@@ -31,7 +31,7 @@ export default class Update extends React.Component{
         let index = updatedState.findIndex(element => element.name==id)
         updatedState[index].inventory=document.getElementById(id).valueAsNumber
         this.props.updateState(updatedState);
-        let response = await Axios.put('http://localhost:3000/items/update',{
+        let response = await Axios.put('/api/items/update',{
             name: updatedState[index].name, 
             newInventory: updatedState[index].inventory
         })
@@ -59,7 +59,7 @@ export default class Update extends React.Component{
    
 
   async addItem(){
-        let response = await Axios.post('http://localhost:3000/items/add', {
+        let response = await Axios.post('/api/items/add', {
             name: this.state.toAdd.name,
             inventory: this.state.toAdd.inventory, 
             price: this.state.toAdd.price
@@ -69,7 +69,7 @@ export default class Update extends React.Component{
     }
 
     async deleteItem(event){
-        let response = await Axios.delete('http://localhost:3000/items/delete', {
+        let response = await Axios.delete('/api/items/delete', {
            data:{ name: event.target.id,}
         }).catch((error)=>console.log(error))
         this.props.getState();

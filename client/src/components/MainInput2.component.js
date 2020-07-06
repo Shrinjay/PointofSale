@@ -66,7 +66,7 @@ export default class MainInput extends React.Component{
 
             this.setState(prevState=>({transactions: [...prevState.transactions, updatedTransactions]}))
 
-            axios.post('http://localhost:3000/log/update',{
+            axios.post('/api/log/update',{
                 items: updatedTransactions.items,
                 key: updatedTransactions.key,
                 totalPrice: updatedTransactions.total,
@@ -82,7 +82,7 @@ export default class MainInput extends React.Component{
                     ++this.state.transactionNo
                         for(var i=0; i<this.state.toSell.length; i++)
                         {   console.log(this.state.toSell[i].name)
-                            let response = await axios.put('http://localhost:3000/items/sell', {
+                            let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold
                             }) 
