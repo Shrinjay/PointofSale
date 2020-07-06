@@ -8,9 +8,10 @@ require('dotenv').config(); //Installs dotenv, which I don't even use.
 
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
+    const path = require('path');
     app.use('/static', express.static(path.join(__dirname, 'client/build')));
   
- 
+    
   }
 
 const port = process.env.PORT || 3000 //This runs the server on port 3000, REVIEW SYNTAX.
