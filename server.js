@@ -24,19 +24,19 @@ app.use(function (req, res, next) {
   })
 
 
-  if (process.env.NODE_ENV === 'production') {
-    // Exprees will serve up production assets
-    const path = require('path');
-    app.use(express.static('client/build'));
 
-  
-  }
 const itemRouter = require('./Item') //Designates ./Item as the file route where all requests to item will be served to
 app.use('/api/items', itemRouter); //Routes any requests at /items endpoint to the item route
 
 const tLogRouter = require('./transactionLog')
-app.use('api/log', tLogRouter);
+app.use('/api/log', tLogRouter);
+if (process.env.NODE_ENV === 'production') {
+    // Exprees will serve up production assets
+    const path = require('path');
+    app.use(express.static('client/build'));
 
+    app.get('*', (req, res) => res.sendFile(path.resolve('client/build', 'index.html'));
+  }
 
 app.listen(port, ()=>{ //Just verification to make sure the server works 
     console.log("Server Works");
