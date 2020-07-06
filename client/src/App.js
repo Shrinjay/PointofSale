@@ -70,7 +70,7 @@ componentDidMount(){
              </Col>
            </Row>
            <Row>
-             <Col md={{offset: 3, size: 3}}> <Button color="primary" size="lg" href="http://localhost:5000/sell" block><br /><h2>Sell Items</h2><br /></Button></Col>
+             <Col md={{offset: 3, size: 3}}> <Button color="primary" size="lg" href="/sell" block><br /><h2>Sell Items</h2><br /></Button></Col>
           <Col md={{ size: 3}}> <Button color="primary" size="lg" href="/modify" block><br /><h2>Add/Update Inventory</h2><br /></Button></Col>
           
            </Row>
