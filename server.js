@@ -28,9 +28,7 @@ app.use(function (req, res, next) {
     // Exprees will serve up production assets
     const path = require('path');
     app.use(express.static('client/build'));
-    app.get('/*', function (req, res) {
-        res.sendFile(path.join(__dirname, './client/build', 'index.html'));
-      });
+
   
   }
 const itemRouter = require('./Item') //Designates ./Item as the file route where all requests to item will be served to
