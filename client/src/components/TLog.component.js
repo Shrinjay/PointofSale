@@ -20,7 +20,7 @@ export default class DisplayLog extends React.Component {
 
     displayLog(){
            
-            return this.state.log.map(element => 
+            return this.state.log.slice(0, 4).map(element => 
                 <tr>
                 <td>
                     {element.date}
