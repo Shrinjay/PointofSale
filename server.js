@@ -11,7 +11,11 @@ if (process.env.NODE_ENV === 'production') {
     const path = require('path');
     app.use('/static', express.static(path.join(__dirname, 'client/build')));
   
-    
+    // Express serve up index.html file if it doesn't recognize route
+
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
   }
 
 const port = process.env.PORT || 3000 //This runs the server on port 3000, REVIEW SYNTAX.
