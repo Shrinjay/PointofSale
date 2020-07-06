@@ -59,7 +59,7 @@ componentDidMount(){
       <MyNavbar />
       <Router>
      <Switch>
-       <Route path="/" component={App}>
+       <Route exact path="/" component={App}>
          <Container fluid={true}>
            <Row>
              <Col md="6">
@@ -77,10 +77,10 @@ componentDidMount(){
          </Container>
        
        </Route>
-       <Route path="/sell/" component={App}>
+       <Route exact path="/sell/" component={App}>
        <MainInput getState={this.getState} items={this.state.items}/>
         </Route>
-        <Route path="/modify/" component={App}>
+        <Route exact path="/modify/" component={App}>
           <Update items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
         </Route>
       </Switch>
