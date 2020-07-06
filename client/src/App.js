@@ -35,7 +35,7 @@ class App extends React.Component {
   }
 
   getState(){
-    axios.get('http://localhost:3000/items') 
+    axios.get('api/items') 
     .then(res => {const response = res.data; /*Response from API is called res, this is a JSON object where the data object is the actual response
         the constant items is assigned the value of res.data*/
       this.setState({items: response});
