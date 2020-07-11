@@ -1,7 +1,6 @@
 {
   "name": "point-of-sale",
-  "proxy": "http://localhost:3000",
-  
+  "proxy": "http://localhost:5000",
   "version": "12.16.3",
   "private": true,
   "dependencies": {

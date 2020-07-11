@@ -69,6 +69,7 @@ export default class MainInput extends React.Component{
             axios.post('/api/log/update',{
                 items: updatedTransactions.items,
                 key: updatedTransactions.key,
+                org: this.props.currentOrg,
                 totalPrice: updatedTransactions.total,
                 date: updatedTransactions.date
             })
@@ -84,7 +85,8 @@ export default class MainInput extends React.Component{
                         {   console.log(this.state.toSell[i].name)
                             let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
-                                amountSold: this.state.toSell[i].amountSold
+                                amountSold: this.state.toSell[i].amountSold,
+                                org: this.props.currentOrg
                             }) 
                            
                            /*NEXT STEP: Find how to reconcile a change in state with updating the database*/

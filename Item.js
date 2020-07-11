@@ -1,27 +1,28 @@
 const express = require('express'); //Requires express
 const router = express.Router(); //Requires the router function of express, which routes requests 
-const app = express(); //Creates app as an instance of express
-let Item = require('./itemModel');  //Imports the Item Model from itemModel.js
-const cors = require('cors')
-router.options('/items/sell', cors())
-app.use(cors())
 
-router.use(cors(
-))
-router.route('/', cors()).get((req, res)=>{ //Handles any GET requests to the / route
-    Item.find() //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
+let Item = require('./itemModel');  //Imports the Item Model from itemModel.js
+
+
+
+
+router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
+    console.log(req.query.org)
+    Item.find({org: req.query.org}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
     .then(items => res.json(items)) //then defines what find() returns as items as sends items as a json object
  
 })
 
-router.route('/add', cors()).post((req, res)=>{ //Handles POST requests to the /add route 
+router.route('/add').post((req, res)=>{ 
+    //Handles POST requests to the /add route 
     const name = req.body.name; //Defines the variable name as the name in the request body json
-  //ipc=internal price code, a bastardized upc for small scale applications.  
+    const org = req.body.org;         
     const inventory = req.body.inventory; //Defines inventory as inventory in request
     const price = req.body.price;  //Defines price as price in request
 
     var newItem = new Item ({ //Creates a new document called newItem 
         name: name, //Defines name, inventory and price using the info in the request body
+        org: org,
         inventory: inventory, 
         price: price,
     });
@@ -31,9 +32,10 @@ router.route('/add', cors()).post((req, res)=>{ //Handles POST requests to the /
 
 })
 
-router.route('/sell', cors()).put((req, res)=>{
+router.route('/sell').put((req, res)=>{
     var item=req.body.item;
     var amountSold=req.body.amountSold;
+    var org = req.body.org;
     var newInventory;
     var oldInventory;
     console.log(item)
@@ -61,8 +63,9 @@ router.route('/sell', cors()).put((req, res)=>{
     
 })
 
-router.route('/update', cors()).put((req, res)=>{
+router.route('/update').put((req, res)=>{
     const name = req.body.name
+    const org = req.body.org
     const newInventory = req.body.newInventory
     Item.findOneAndUpdate({name: name}, {inventory: newInventory}, {new:true}, (err, data)=>{
         if (typeof data=='undefined')
@@ -76,8 +79,9 @@ router.route('/update', cors()).put((req, res)=>{
     })
 })
 
-router.route('/delete', cors()).delete((req, res)=>{
+router.route('/delete').delete((req, res)=>{
     const name = req.body.name
+    const org = req.body.org
     Item.findOneAndDelete({name: name}, (err, data)=>{
         if (typeof data=='undefined')
           {   console.log('fuck2')
