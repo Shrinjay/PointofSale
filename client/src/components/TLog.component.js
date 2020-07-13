@@ -14,7 +14,9 @@ export default class DisplayLog extends React.Component {
     }
 
     async getLog(){
-        let response = await axios.get('/api/log/')
+        let response = await axios.get('/api/log/', {headers: {
+            Authorization: this.props.token
+        }})
         this.setState({log: response.data})
     }
 

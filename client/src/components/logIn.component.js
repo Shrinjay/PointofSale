@@ -56,9 +56,9 @@ export default class LogIn extends React.Component{
         })
  
         if (response.data !=  "")
-        {   console.log("bruh")
+        {   
             this.setState({failedAuth: false})
-            this.props.updateOrg(response.data)
+            this.props.updateOrg(response.data.JWT, response.data.orgName)
         }
         else {
             this.setState({failedAuth: true})

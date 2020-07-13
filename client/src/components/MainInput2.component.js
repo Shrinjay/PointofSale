@@ -72,6 +72,8 @@ export default class MainInput extends React.Component{
                 org: this.props.currentOrg,
                 totalPrice: updatedTransactions.total,
                 date: updatedTransactions.date
+            }, {
+                headers: {Authorization: this.props.token}
             })
             .then((res)=>console.log(res))
           }
@@ -87,7 +89,7 @@ export default class MainInput extends React.Component{
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
                                 org: this.props.currentOrg
-                            }) 
+                            }, {headers: {Authorization: this.props.token}}) 
                            
                            /*NEXT STEP: Find how to reconcile a change in state with updating the database*/
                         }

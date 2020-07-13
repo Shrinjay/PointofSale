@@ -4,12 +4,10 @@ const router = express.Router(); //Requires the router function of express, whic
 let Item = require('./itemModel');  //Imports the Item Model from itemModel.js
 
 
-
-
 router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
-    console.log(req.query.org)
     Item.find({org: req.query.org}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
-    .then(items => res.json(items)) //then defines what find() returns as items as sends items as a json object
+    .then(items => {console.log(items)
+        res.json(items)}) //then defines what find() returns as items as sends items as a json object
  
 })
 
@@ -39,21 +37,19 @@ router.route('/sell').put((req, res)=>{
     var newInventory;
     var oldInventory;
     console.log(item)
-    Item.findOne({name: item}, (err, found)=>{
+    Item.findOne({name: item, org: org}, (err, found)=>{
       oldInventory=found.inventory; 
-      if(typeof found =='undefined')
-      {
-          console.log('fuck')
-      }
+      console.log(found)
       newInventory = oldInventory-amountSold;
-      Item.findOneAndUpdate({name: item}, {inventory: newInventory}, {new: true}, function(err, data) {
+      Item.findOneAndUpdate({name: item, org: org}, {inventory: newInventory}, {new: true}, function(err, data) {
           if (typeof data=='undefined')
-          {   console.log('fuck2')
+          {   
               res.send('undef');
           }
+          
           else {
           data.save();
-          res.send('Success') 
+           res.json(data)
           }
       });
       return null;

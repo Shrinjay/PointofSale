@@ -1,40 +1,52 @@
+const jwt = require('jsonwebtoken');
 const express = require('express');
-const router = express.Router()
-
+const router = express.Router();
+const bcrypt = require('bcrypt');
 let User = require('./userModel')
 
-router.route('/login/').post((req, res)=>{
+router.route('/login').post((req, res)=>{
     let org = req.body.org
     let pass = req.body.pass
-    User.findOne( {orgName: org}, (error, found)=>{
+    User.findOne( {orgName: org}, async (error, found)=>{ /*Eventually, add a feature here where it differentaties between the user not existing and the password being wrong*/
        
         if (!found)
-        {   console.log("fuck")
+        {   
             res.send(null)
         }
-        else { console.log(found.password)
-            console.log(pass)
-        if (found.password==pass)
-        {   
-            res.send(found.orgName)
-        }
+        else { 
+        bcrypt.compare(pass, found.password, (err, result) => {
+            if (result==true)
+            {   
+                const response = {
+                    JWT: found.generateAuthToken(found.orgName),
+                    orgName: found.orgName
+                }
+                
+                res.json(response)    
+            }
+            else {
+                res.send(null)
+            }
+        })
     }
         
     }
     )
 })
 
-router.route('/newUser/').post((req, res)=>{
+router.route('/newUser').post(async (req, res)=>{
     let org = req.body.org
-    let pass = req.body.pass
-
-    var newOrg = new User ({
-        orgName: org,
-        password: pass
-    })
-
-    newOrg.save()
-    .then(()=> res.send(org))
+    let pass = await bcrypt.hash(req.body.pass, 10)
+   
+        var newOrg = new User ({
+            orgName: org,
+            password: pass
+        })
+    
+        newOrg.save()
+        .then(()=> res.send(org))
+    
+   
 })
 
 module.exports = router;
