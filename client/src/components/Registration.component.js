@@ -45,8 +45,9 @@
     }
 
     render(){
+       console.log('pepe')
         return (
-        <Modal isOpen={this.props.org=="register" ? true: false}>
+        <Modal isOpen={this.props.token=="register" ? true: false}>
         <ModalHeader>Create a new account for your organization {this.state.mismatch==true && <Alert color="danger">Passwords do not match</Alert>}</ModalHeader>
         <ModalBody>
             <Label for="orgName">Organization Username:</Label>

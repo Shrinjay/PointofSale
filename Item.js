@@ -1,11 +1,14 @@
 const express = require('express'); //Requires express
 const router = express.Router(); //Requires the router function of express, which routes requests 
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 let Item = require('./itemModel');  //Imports the Item Model from itemModel.js
+const { ExtractJwt } = require('passport-jwt');
 
 
 router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
-    Item.find({org: req.query.org}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
+    Item.find({org: jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
     .then(items => {console.log(items)
         res.json(items)}) //then defines what find() returns as items as sends items as a json object
  
@@ -33,15 +36,15 @@ router.route('/add').post((req, res)=>{
 router.route('/sell').put((req, res)=>{
     var item=req.body.item;
     var amountSold=req.body.amountSold;
-    var org = req.body.org;
+    var reqOrg = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY);
     var newInventory;
     var oldInventory;
-    console.log(item)
-    Item.findOne({name: item, org: org}, (err, found)=>{
+    
+    Item.findOne({name: item, org: reqOrg}, (err, found)=>{
       oldInventory=found.inventory; 
-      console.log(found)
+      
       newInventory = oldInventory-amountSold;
-      Item.findOneAndUpdate({name: item, org: org}, {inventory: newInventory}, {new: true}, function(err, data) {
+      Item.findOneAndUpdate({name: item, org: reqOrg}, {inventory: newInventory}, {new: true}, function(err, data) {
           if (typeof data=='undefined')
           {   
               res.send('undef');
@@ -61,9 +64,9 @@ router.route('/sell').put((req, res)=>{
 
 router.route('/update').put((req, res)=>{
     const name = req.body.name
-    const org = req.body.org
+    const reqOrg = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)
     const newInventory = req.body.newInventory
-    Item.findOneAndUpdate({name: name}, {inventory: newInventory}, {new:true}, (err, data)=>{
+    Item.findOneAndUpdate({name: name, org: reqOrg}, {inventory: newInventory}, {new:true}, (err, data)=>{
         if (typeof data=='undefined')
         {   console.log('fuck2')
             res.send('undef');
@@ -77,8 +80,8 @@ router.route('/update').put((req, res)=>{
 
 router.route('/delete').delete((req, res)=>{
     const name = req.body.name
-    const org = req.body.org
-    Item.findOneAndDelete({name: name}, (err, data)=>{
+    const reqOrg = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)
+    Item.findOneAndDelete({name: name, org: reqOrg}, (err, data)=>{
         if (typeof data=='undefined')
           {   console.log('fuck2')
               res.send('undef');

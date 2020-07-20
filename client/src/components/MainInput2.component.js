@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
-import {Button, Jumbotron, Container, Row, Col} from 'reactstrap';
+import {Button, Jumbotron, Container, Row, Col, Alert} from 'reactstrap';
 
 class sellDisplay extends React.Component{
     constructor(props){
@@ -33,7 +33,8 @@ export default class MainInput extends React.Component{
                 key: Number,
                 date: String,
                 items: [],
-                total: []
+                total: [],
+                failure: false
             }]
         }
         this.clickItem = this.clickItem.bind(this);
@@ -69,7 +70,6 @@ export default class MainInput extends React.Component{
             axios.post('/api/log/update',{
                 items: updatedTransactions.items,
                 key: updatedTransactions.key,
-                org: this.props.currentOrg,
                 totalPrice: updatedTransactions.total,
                 date: updatedTransactions.date
             }, {
@@ -80,15 +80,23 @@ export default class MainInput extends React.Component{
 
           async clickItem(event){
                 let id = event.target.id;
-              
+                
                 if (event.target.id=="sell"){
-                    ++this.state.transactionNo
+                    if (!this.state.toSell)
+                    {
+                        this.setState({failure: true})
+                        return;
+                    } 
+                    else {
+                        this.setState({failure: false})
+                        ++this.state.transactionNo                    
+
                         for(var i=0; i<this.state.toSell.length; i++)
                         {   console.log(this.state.toSell[i].name)
                             let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
-                                org: this.props.currentOrg
+                    
                             }, {headers: {Authorization: this.props.token}}) 
                            
                            /*NEXT STEP: Find how to reconcile a change in state with updating the database*/
@@ -96,7 +104,8 @@ export default class MainInput extends React.Component{
                         this.updateTLog(this.state.transactionNo)
                         this.props.getState()
                         this.setState({toSell: [], totalPrice: 0})
-                     
+                    
+                    }
                 }
                 else {
                 let found = this.props.items.find(element => element.name==id);
@@ -120,21 +129,24 @@ export default class MainInput extends React.Component{
             }
           }
           renderSell(){
-            return this.state.toSell.map(element => 
-                <span>
-                    <Row>
+            return(
+                
+                this.state.toSell.map(element => 
+                    <span>
+                        <Row>
+                            <Col>
+                        {element.name}
+                        </Col>
                         <Col>
-                    {element.name}
-                    </Col>
-                    <Col>
-                    {element.amountSold}
-                    </Col>
-                    <Col>
-                       ${element.price}
-                    </Col>
-                    <br />
-                    </Row>
-                </span>
+                        {element.amountSold}
+                        </Col>
+                        <Col>
+                           ${element.price}
+                        </Col>
+                        <br />
+                        </Row>
+                    </span>
+                )
             )
         }
           
@@ -146,6 +158,7 @@ export default class MainInput extends React.Component{
        
        
         <Jumbotron>
+        {this.state.failure==true && <Alert color="danger">No items selected for sale.</Alert>}
             <Container fluid={true}>
                 <Row>
                     <Col>

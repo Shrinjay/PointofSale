@@ -16,7 +16,7 @@ export default class Navbar extends React.Component{
             <NavItem>
                 <NavLink href="/modify">Add/Update Inventory</NavLink>
             </NavItem>
-            {this.props.org!=null && <NavItem><NavLink href="#" onClick={this.props.updateOrg}> Log Out </NavLink></NavItem>}
+            {this.props.token!=null && <NavItem><NavLink href="#" onClick={this.props.updateOrg}> Log Out </NavLink></NavItem>}
         </Nav>
         )
     }

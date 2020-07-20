@@ -4,25 +4,11 @@ import {Table} from 'reactstrap';
 export default class DisplayLog extends React.Component {
     constructor(){
         super();
-        this.state={
-            log:[]
-        }
+      
     }
-
-    componentDidMount(){
-        this.getLog()
-    }
-
-    async getLog(){
-        let response = await axios.get('/api/log/', {headers: {
-            Authorization: this.props.token
-        }})
-        this.setState({log: response.data})
-    }
-
     displayLog(){
-           let size = this.state.log.length;
-            return this.state.log.slice(size-4).map(element => 
+           let size = this.props.logs.length;
+            return this.props.logs.slice(size-4).map(element => 
                 <tr>
                 <td>
                     {element.date}

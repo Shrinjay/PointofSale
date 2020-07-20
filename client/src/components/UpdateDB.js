@@ -61,7 +61,7 @@ export default class Update extends React.Component{
   async addItem(){
         let response = await Axios.post('/api/items/add', {
             name: this.state.toAdd.name,
-            org: this.props.currentOrg,
+            org: this.props.orgName,
             inventory: this.state.toAdd.inventory, 
             price: this.state.toAdd.price
         }, {headers: {
@@ -73,7 +73,7 @@ export default class Update extends React.Component{
 
     async deleteItem(event){
         let response = await Axios.delete('/api/items/delete', {
-           data:{ name: event.target.id, org: this.props.currentOrg},
+           data:{ name: event.target.id},
            headers: {Authorization: this.props.token}
         }).catch((error)=>console.log(error))
         this.props.getState();

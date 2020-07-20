@@ -28,7 +28,7 @@ export default class LogIn extends React.Component{
 
     logIn() {
         return (
-            <Modal isOpen={this.props.org==null ? true:false}>
+            <Modal isOpen={this.props.token==null ? true:false}>
                     <ModalHeader>
                     {this.state.failedAuth==true && <Alert color="danger">Invalid username/password</Alert>}
                 <h2>Please log in with your organization's credentials:</h2>

@@ -14,7 +14,8 @@ import Register from './components/Registration.component'
 
 import {Container, Row, Col, Button, Alert} from 'reactstrap';
 
-require('dotenv').config()
+
+
 //Quick note: Passing items data as props to function doesn't work because API call is asynchronous -> Maybe this means async will make accessing global state difficult in general?
 
 
@@ -25,8 +26,9 @@ class App extends React.Component {
     this.state = {
       key: 0,
       items: [],
-      accessString: `JWT ${sessionStorage.getItem('JWT')}`,
-      org: sessionStorage.getItem('org')
+      accessString: sessionStorage.getItem('JWT'),
+      orgName: sessionStorage.getItem('orgName'),
+      logs: []
     }
     this.updateDisplay = this.updateDisplay.bind(this)
     this.getState = this.getState.bind(this)
@@ -34,6 +36,7 @@ class App extends React.Component {
     this.register = this.register.bind(this)
     this.updateOrg = this.updateOrg.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.getLog = this.getLog.bind(this)
   }
 
   updateDisplay(){
@@ -42,17 +45,17 @@ class App extends React.Component {
   }
 
   getState(){
-    
-    
-    axios.get('/api/items/', {params:  {org: this.state.org}, headers: {Authorization: this.state.accessString}}) 
-    .then(res => {const response = res.data; console.log(response) /*Response from API is called res, this is a JSON object where the data object is the actual response
+    axios.get('/api/items/', {headers: {Authorization: this.state.accessString}}) 
+    .then(res => {const response = res.data;  /*Response from API is called res, this is a JSON object where the data object is the actual response
         the constant items is assigned the value of res.data*/
       this.setState({items: response});
         }) //The state items is set to the same value as the constant items
   }
 
   logOut() {
-    this.setState({org: null})
+    sessionStorage.setItem('JWT', null)
+    sessionStorage.setItem('orgName', null)
+    this.setState({accessString: null, orgName: null})
   }
 
   updateItems(updatedState){
@@ -62,24 +65,35 @@ class App extends React.Component {
 
   updateOrg(JWT, orgName){
     sessionStorage.setItem('JWT', JWT);
-    sessionStorage.setItem('org', orgName)
-    this.setState({accessString: sessionStorage.getItem('JWT'), org: sessionStorage.getItem('org')}, function() {
-    
+    sessionStorage.setItem('orgName', orgName)
+    this.setState({accessString: sessionStorage.getItem('JWT'), orgName: orgName}, function() {
+      console.log(this.state.accessString)
       this.getState();
+      this.getLog();
     }) 
   }
 
+  async getLog(){
+    let response = await axios.get('/api/log/', {headers: {
+        Authorization: this.state.accessString
+    }})
+    console.log(response)
+    this.setState({logs: response.data})
+}
+
 
 register() {
-  this.setState({org: "register"})
+  sessionStorage.setItem('JWT', 'register')
+  this.setState({accessString: "register"}) 
 } 
 
 
 componentDidMount(){
-  if (this.state.org!=null || this.state.org!="register")
+  if (this.state.accessString!=null || this.state.accessString!="register")
   { 
     console.log("pok")
   this.getState()
+  this.getLog()
   }
   }
 
@@ -88,10 +102,11 @@ componentDidMount(){
   
   render (){ return (
     <div className="App">
-      <MyNavbar org={this.state.org} updateOrg={this.logOut}/>
-      {this.state.org==null && <LogIn updateOrg={this.updateOrg} register={this.register}/>}
-      {this.state.org=="register" && <Register updateOrg={this.updateOrg} org={this.state.org}/>}
-      {this.state.org!=null && <Alert>You're logged in as {this.state.org}</Alert>}
+      <MyNavbar token={this.state.accessString} updateOrg={this.logOut}/>
+      {console.log(process.env.PRIVATE_KEY)}
+      {this.state.accessString==null && <LogIn updateOrg={this.updateOrg} token={this.state.accessString} register={this.register}/>}
+      {this.state.accessString=="register" && <Register updateOrg={this.updateOrg} token={this.state.accessString}/>}
+      {this.state.accessString!=null && this.state.accessString!="register" && <Alert>You're logged in as {this.state.orgName}</Alert>}
       <Router>
      <Switch>
        <Route exact path="/" component={App}>
@@ -101,7 +116,7 @@ componentDidMount(){
              <Display token={this.state.accessString} key={this.state.key} items={this.state.items}/> {/*Just renders the display component*/}
              </Col>
              <Col md='6'>
-              <DisplayLog token={this.state.accessString} />
+              <DisplayLog logs={this.state.logs} token={this.state.accessString} />
              </Col>
            </Row>
            <Row>
@@ -113,10 +128,10 @@ componentDidMount(){
        
        </Route>
        <Route exact path="/sell/" component={App}>
-       <MainInput token={this.state.accessString} currentOrg={this.state.org} getState={this.getState} items={this.state.items}/>
+       <MainInput token={this.state.accessString} getState={this.getState} items={this.state.items}/>
         </Route>
         <Route exact path="/modify/" component={App}>
-          <Update token={this.state.accessString} currentOrg={this.state.org} items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
+          <Update token={this.state.accessString} orgName={this.state.orgName} items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
         </Route>
       </Switch>
       </Router>

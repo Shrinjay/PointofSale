@@ -18,7 +18,7 @@ router.route('/login').post((req, res)=>{
             if (result==true)
             {   
                 const response = {
-                    JWT: found.generateAuthToken(found.orgName),
+                    JWT: `JWT ${jwt.sign(found.orgName, process.env.PRIVATE_KEY)}`,
                     orgName: found.orgName
                 }
                 
