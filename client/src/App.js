@@ -131,7 +131,7 @@ componentDidMount(){
        <MainInput token={this.state.accessString} getState={this.getState} items={this.state.items}/>
         </Route>
         <Route exact path="/modify/" component={App}>
-          <Update token={this.state.accessString} orgName={this.state.orgName} items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
+          <Update token={this.state.accessString} orgName={this.state.orgName } items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
         </Route>
       </Switch>
       </Router>

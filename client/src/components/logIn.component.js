@@ -6,8 +6,8 @@ export default class LogIn extends React.Component{
     {
         super(props)
         this.state={
-            orgName: null,
-            password: null,
+            orgName: "",
+            password: "",
             failedAuth: false,
         }
         this.checkCreds = this.checkCreds.bind(this)
@@ -50,6 +50,12 @@ export default class LogIn extends React.Component{
     }
 
    async checkCreds() {
+
+    if (this.state.orgName=="" || this.state.password=="")
+    {
+        this.setState({failedAuth: true})
+        return
+    }
         let response = await axios.post('/api/users/login/', {
             org: this.state.orgName,
             pass: this.state.password

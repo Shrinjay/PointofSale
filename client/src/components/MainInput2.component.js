@@ -34,8 +34,10 @@ export default class MainInput extends React.Component{
                 date: String,
                 items: [],
                 total: [],
-                failure: false
-            }]
+                failure: false,
+              
+            }], 
+            invalidTrans: false,
         }
         this.clickItem = this.clickItem.bind(this);
     }
@@ -82,13 +84,14 @@ export default class MainInput extends React.Component{
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
+                    
                     if (!this.state.toSell)
                     {
                         this.setState({failure: true})
                         return;
                     } 
                     else {
-                        this.setState({failure: false})
+                        this.setState({failure: false, invalidTrans: false})
                         ++this.state.transactionNo                    
 
                         for(var i=0; i<this.state.toSell.length; i++)
@@ -97,7 +100,12 @@ export default class MainInput extends React.Component{
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
                     
-                            }, {headers: {Authorization: this.props.token}}) 
+                            }, {headers: {Authorization: this.props.token}})
+                            if (response.data=="Excess sold")
+                            {
+                                this.setState({invalidTrans: this.state.toSell[i].name})
+                                break
+                            }
                            
                            /*NEXT STEP: Find how to reconcile a change in state with updating the database*/
                         }
@@ -152,6 +160,7 @@ export default class MainInput extends React.Component{
           
 
     render(){
+        
         return(
             <div style={{textAlign: 'center'}}>
                
@@ -159,6 +168,8 @@ export default class MainInput extends React.Component{
        
         <Jumbotron>
         {this.state.failure==true && <Alert color="danger">No items selected for sale.</Alert>}
+        
+        {this.state.invalidTrans!=false && <Alert color="danger">Amount of {this.state.invalidTrans} sold exceeds amount in inventory!</Alert>}
             <Container fluid={true}>
                 <Row>
                     <Col>

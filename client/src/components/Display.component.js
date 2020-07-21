@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Container, Row, Col} from 'reactstrap';
+import {Container, Row, Col, Table} from 'reactstrap';
 import App from "../App";
 
 
@@ -29,14 +29,14 @@ export default class Display extends React.Component{ //Exports Display as the d
            
             <div style={{textAlign: 'center'}}>
                 
-                <table class="table">
+                <Table>
                     <tr>
                         <th>Item</th>
                         <th>Price</th>
                         <th>Inventory</th>
                     </tr>
                     {this.tableData()} {/**Calls the function tableData(), which is why empty brackets exist */}
-                </table>
+                </Table>
                
             </div>
         </div>

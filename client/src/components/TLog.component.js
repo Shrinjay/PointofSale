@@ -32,9 +32,9 @@ export default class DisplayLog extends React.Component {
             <h1>Recent Transactions</h1>
             <Table>
                 <thead>
-                    <td><b>Date:Time</b></td>
-                    <td><b>Items Sold</b></td>
-                    <td><b>Total Transaction</b></td>
+                    <th><b>Date:Time</b></th>
+                    <th><b>Items Sold</b></th>
+                    <th><b>Total Transaction</b></th>
                 </thead>
                 {this.displayLog()}
             </Table>

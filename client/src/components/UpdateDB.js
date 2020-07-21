@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Row, Col, Form, Button, Jumbotron, Table, Label, Input} from 'reactstrap';
+import {Container, Row, Col, Form, Button, Jumbotron, Table, Label, Input, Alert} from 'reactstrap';
 import Axios from 'axios';
 
 export default class Update extends React.Component{
@@ -9,7 +9,8 @@ export default class Update extends React.Component{
         toAdd: {
             name: null,
             price: null,
-            inventory: null
+            inventory: null,
+            failedAdd: false
         },
     }
     this.handleChange = this.handleChange.bind(this)
@@ -34,7 +35,7 @@ export default class Update extends React.Component{
         let response = await Axios.put('/api/items/update',{
             name: updatedState[index].name, 
             newInventory: updatedState[index].inventory
-        })
+        }, {headers: {Authorization: this.props.token}})
         return response;
     }
     let updatedStateAdd=this.state.toAdd
@@ -59,9 +60,14 @@ export default class Update extends React.Component{
    
 
   async addItem(){
+      this.setState({failedAdd: false})
+      if (this.state.toAdd.name==null || this.state.toAdd.inventory==null || this.state.toAdd.inventory==null)
+      {
+            this.setState({failedAdd: true})
+            return
+      }
         let response = await Axios.post('/api/items/add', {
             name: this.state.toAdd.name,
-            org: this.props.orgName,
             inventory: this.state.toAdd.inventory, 
             price: this.state.toAdd.price
         }, {headers: {
@@ -94,6 +100,7 @@ export default class Update extends React.Component{
             {this.renderButtons()}
             </Table>
             <Form>
+                {this.state.failedAdd==true && <Alert color="danger">One or more fields are empty!</Alert>}
                 <Label for="inputName">Item Name:</Label>
                 <Input onChange={this.handleChange} type="text" name="inputName" id="inputName" />
                 

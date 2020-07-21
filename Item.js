@@ -17,7 +17,7 @@ router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
 router.route('/add').post((req, res)=>{ 
     //Handles POST requests to the /add route 
     const name = req.body.name; //Defines the variable name as the name in the request body json
-    const org = req.body.org;         
+    const org = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY);      
     const inventory = req.body.inventory; //Defines inventory as inventory in request
     const price = req.body.price;  //Defines price as price in request
 
@@ -39,11 +39,15 @@ router.route('/sell').put((req, res)=>{
     var reqOrg = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY);
     var newInventory;
     var oldInventory;
-    
     Item.findOne({name: item, org: reqOrg}, (err, found)=>{
       oldInventory=found.inventory; 
       
       newInventory = oldInventory-amountSold;
+      if (newInventory<0)
+      {
+          res.send('Excess sold')
+          return
+      }
       Item.findOneAndUpdate({name: item, org: reqOrg}, {inventory: newInventory}, {new: true}, function(err, data) {
           if (typeof data=='undefined')
           {   
