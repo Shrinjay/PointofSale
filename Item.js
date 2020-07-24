@@ -10,7 +10,7 @@ const { ExtractJwt } = require('passport-jwt');
 router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
     Item.find({org: jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
     .then(items => 
-        res.json(items)}) //then defines what find() returns as items as sends items as a json object
+        res.json(items)) //then defines what find() returns as items as sends items as a json object
  
 })
 
