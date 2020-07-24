@@ -98,7 +98,7 @@ componentDidMount(){
 
   
   render (){ 
-  
+  {console.log("test")}
     return (
     <div className="App">
       <MyNavbar token={this.state.accessString} updateOrg={this.logOut}/>
