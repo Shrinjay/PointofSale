@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 let User = require('./userModel')
 
 router.route('/login').post((req, res)=>{
+try {
     let org = req.body.org
     let pass = req.body.pass
     User.findOne( {orgName: org}, async (error, found)=>{ /*Eventually, add a feature here where it differentaties between the user not existing and the password being wrong*/
@@ -32,6 +33,11 @@ router.route('/login').post((req, res)=>{
         
     }
     )
+}
+
+catch (error) {
+    console.log(error)
+}
 })
 
 router.route('/newUser').post(async (req, res)=>{
