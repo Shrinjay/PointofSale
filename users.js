@@ -57,7 +57,7 @@ router.route('/newUser').post(async (req, res)=>{
         })
     
         newOrg.save()
-        .then(()=> res.send(org))
+        .then(()=> res.send({org: req.body.org, pass: req.body.pass}))
     
    
 })

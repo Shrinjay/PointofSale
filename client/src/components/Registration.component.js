@@ -50,7 +50,7 @@
         }
     }
 
-    register(){
+   async register(){
         if (this.state.pass!=this.state.passConfirm)
         {
             this.setState({mismatch: true})
@@ -66,11 +66,15 @@
             return
         }
         else {
-            let response = axios.post('/api/users/newUser', {
+            let response = await axios.post('/api/users/newUser', {
                 org: this.state.org,
                 pass: this.state.pass
             })
-            this.props.updateOrg(response.data)
+            let loginResponse = await axios.post('/api/users/login', {
+                org: this.state.org, 
+                pass: this.state.pass
+            })
+            this.props.updateOrg(loginResponse.data.JWT, loginResponse.data.orgName)
         }  
     }
 
