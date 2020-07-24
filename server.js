@@ -23,8 +23,7 @@ app.use(cors({origin: 'http://localhost:3000'})); //Directs app to use cors and 
 app.use(passport.initialize())
 require('./config/passport-config')
 
-console.log(process.env.PRIVATE_KEY)
-  console.log(process.env.MONGO_URI)
+
 
 const itemRouter = require('./Item') //Designates ./Item as the file route where all requests to item will be served to
 app.use('/api/items', passport.authenticate('jwt', {session: false}), itemRouter); //Routes any requests at /items endpoint to the item route

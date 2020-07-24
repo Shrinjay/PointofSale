@@ -12,13 +12,13 @@ try {
        
         try {
             if (!found)
-        {   console.log(orgName)
+        {   
             res.send(null)
         }
         else { 
         bcrypt.compare(pass, found.password, (err, result) => {
             if (result==true)
-            {   console.log(process.env.PRIVATE_KEY)
+            {  
                 const response = {
                     JWT: `JWT ${jwt.sign(found.orgName, process.env.PRIVATE_KEY)}`,
                     orgName: found.orgName
@@ -27,7 +27,7 @@ try {
                 res.json(response)    
             }
             else {
-                console.log("null")
+               
                 res.send(null)
             }
         })
