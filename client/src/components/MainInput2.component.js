@@ -45,7 +45,7 @@ export default class MainInput extends React.Component{
           renderButtons(){
               return this.props.items.map(item => 
                 <span>
-             <Button color="primary" onClick={this.clickItem} id={item.name}>{item.name}</Button>
+             <Button  onClick={this.clickItem} id={item.name}>{item.name}</Button>
              </span>
               )
           }
@@ -84,8 +84,8 @@ export default class MainInput extends React.Component{
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
-                    
-                    if (!this.state.toSell)
+                    console.log(this.state.toSell)
+                    if (this.state.toSell.length==0)
                     {
                         this.setState({failure: true})
                         return;
@@ -164,13 +164,14 @@ export default class MainInput extends React.Component{
         return(
             <div style={{textAlign: 'center'}}>
                
-       
-       
+       <Container fluid={true}>
+       <Col md={{size: 10, offset: 1}}>
         <Jumbotron>
         {this.state.failure==true && <Alert color="danger">No items selected for sale.</Alert>}
         
         {this.state.invalidTrans!=false && <Alert color="danger">Amount of {this.state.invalidTrans} sold exceeds amount in inventory!</Alert>}
             <Container fluid={true}>
+            
                 <Row>
                     <Col>
                     <b>Item</b>
@@ -195,6 +196,8 @@ export default class MainInput extends React.Component{
             </Row>
             </Container>
         </Jumbotron>
+        </Col>
+        </Container>
         {this.renderButtons()}
         <br /><br />
         <Button color="success" id="sell" onClick={this.clickItem}>Sell</Button>

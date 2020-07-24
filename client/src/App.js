@@ -53,9 +53,8 @@ class App extends React.Component {
   }
 
   logOut() {
-    sessionStorage.setItem('JWT', null)
-    sessionStorage.setItem('orgName', null)
-    this.setState({accessString: null, orgName: null})
+    sessionStorage.clear()
+    this.setState({accessString: null, orgName: null, items: [], logs: []})
   }
 
   updateItems(updatedState){
@@ -83,29 +82,29 @@ class App extends React.Component {
 
 
 register() {
-  sessionStorage.setItem('JWT', 'register')
+  
   this.setState({accessString: "register"}) 
 } 
 
 
 componentDidMount(){
-  if (this.state.accessString!=null || this.state.accessString!="register")
-  { 
-    console.log("pok")
+ 
   this.getState()
   this.getLog()
-  }
+  
   }
 
 
 
   
-  render (){ return (
+  render (){ 
+    console.log(process.env.PRIVATE_KEY)
+    return (
     <div className="App">
       <MyNavbar token={this.state.accessString} updateOrg={this.logOut}/>
-      {console.log(process.env.PRIVATE_KEY)}
+      
       {this.state.accessString==null && <LogIn updateOrg={this.updateOrg} token={this.state.accessString} register={this.register}/>}
-      {this.state.accessString=="register" && <Register updateOrg={this.updateOrg} token={this.state.accessString}/>}
+      {this.state.accessString=="register" && <Register logOut={this.logOut} updateOrg={this.updateOrg} token={this.state.accessString}/>}
       {this.state.accessString!=null && this.state.accessString!="register" && <Alert>You're logged in as {this.state.orgName}</Alert>}
       <Router>
      <Switch>

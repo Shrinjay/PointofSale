@@ -90,28 +90,55 @@ export default class Update extends React.Component{
     render(){
         return(
             <div>
-                <Table>
+                <Container fluid={true}>
+                    <Row>
+                    <Col md={{size: 10, offset: 1}}>
+                <Table striped bordered>
                     <thead>
                     <tr>
                         <th>Item</th>
                         <th>Inventory</th>
+                        <th>Delete Items</th>
                     </tr>
                     </thead>
             {this.renderButtons()}
             </Table>
-            <Form>
+            </Col>
+            </Row>
+           
+
+           
+             <Form>
+                 <Row>
+                     <Col md={{size: 6, offset: 3}}>
                 {this.state.failedAdd==true && <Alert color="danger">One or more fields are empty!</Alert>}
                 <Label for="inputName">Item Name:</Label>
                 <Input onChange={this.handleChange} type="text" name="inputName" id="inputName" />
-                
+                </Col>
+                </Row>
+
+                <Row>
+                <Col md={{size: 3, offset: 3}}>
                 <Label for="inputInventory">Current Inventory:</Label>
                 <Input onChange={this.handleChange} type="number" name="inputInventory" id="inputInventory" />
-
+                </Col>
+                <Col md={{size: 3}}>
                 <Label for="inputPrice">Item Price:</Label>
                 <Input onChange={this.handleChange} type="number" name="inputPrice" id="inputPrice" />
-
-                <Button color="success" onClick={this.addItem}>Add New Item</Button>
+                </Col>
+                </Row>
+                
+                
+                <br />
+                <Row>
+                    <Col md={{size: 4, offset: 4}}>
+                <Button color="success" block onClick={this.addItem}>Add New Item</Button>
+                </Col>
+                </Row>
             </Form>
+            </Container>
+            
+           
             </div>
             
         )

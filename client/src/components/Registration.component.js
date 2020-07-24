@@ -89,6 +89,7 @@
             <Input type="password" id="confirmPass" onChange={this.handleChange}/>
         </ModalBody>
         <ModalFooter>
+            <Button onClick={this.props.logOut}>Cancel</Button>
             <Button type="button" onClick={this.register}>Register</Button>
         </ModalFooter>
     </Modal>
