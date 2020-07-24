@@ -98,7 +98,7 @@ componentDidMount(){
 
   
   render (){ 
-    console.log(process.env.PRIVATE_KEY)
+  
     return (
     <div className="App">
       <MyNavbar token={this.state.accessString} updateOrg={this.logOut}/>

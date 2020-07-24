@@ -16,7 +16,7 @@ router.route('/login').post((req, res)=>{
         else { 
         bcrypt.compare(pass, found.password, (err, result) => {
             if (result==true)
-            {   
+            {   console.log(process.env.PRIVATE_KEY)
                 const response = {
                     JWT: `JWT ${jwt.sign(found.orgName, process.env.PRIVATE_KEY)}`,
                     orgName: found.orgName
