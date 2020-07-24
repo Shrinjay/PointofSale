@@ -10,7 +10,8 @@ try {
     let pass = req.body.pass
     User.findOne( {orgName: org}, async (error, found)=>{ /*Eventually, add a feature here where it differentaties between the user not existing and the password being wrong*/
        
-        if (!found)
+        try {
+            if (!found)
         {   console.log(orgName)
             res.send(null)
         }
@@ -31,6 +32,11 @@ try {
             }
         })
     }
+        }
+
+        catch(error) {
+            console.log(error)
+        }
         
     }
     )
