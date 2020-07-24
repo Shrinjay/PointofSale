@@ -11,7 +11,7 @@ try {
     User.findOne( {orgName: org}, async (error, found)=>{ /*Eventually, add a feature here where it differentaties between the user not existing and the password being wrong*/
        
         if (!found)
-        {   
+        {   console.log(orgName)
             res.send(null)
         }
         else { 
@@ -26,6 +26,7 @@ try {
                 res.json(response)    
             }
             else {
+                console.log("null")
                 res.send(null)
             }
         })
