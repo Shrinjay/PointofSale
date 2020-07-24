@@ -77,14 +77,14 @@ export default class MainInput extends React.Component{
             }, {
                 headers: {Authorization: this.props.token}
             })
-            .then((res)=>console.log(res))
+            
           }
 
           async clickItem(event){
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
-                    console.log(this.state.toSell)
+                  
                     if (this.state.toSell.length==0)
                     {
                         this.setState({failure: true})
@@ -95,7 +95,7 @@ export default class MainInput extends React.Component{
                         ++this.state.transactionNo                    
 
                         for(var i=0; i<this.state.toSell.length; i++)
-                        {   console.log(this.state.toSell[i].name)
+                        {   
                             let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
@@ -118,14 +118,14 @@ export default class MainInput extends React.Component{
                 else {
                 let found = this.props.items.find(element => element.name==id);
                 if (this.state.toSell.some(element => element.name==found.name)) {
-                    console.log("Already got it, adding on")
+               
                     let index = this.state.toSell.findIndex(element => element.name==found.name)
                     let soldItems = this.state.toSell
                     ++soldItems[index].amountSold
                    this.setState(prevState => ({toSell: soldItems, totalPrice: prevState.totalPrice+found.price}))
                 }
                 else{
-                    console.log("Adding new item")
+                   
                     var soldItem = {
                         id: found._id,
                         name: found.name,

@@ -28,7 +28,7 @@ router.route('/update').post((req, res)=>{
         key: key, 
         total: totalPrice
     })
-    console.log(newLog)
+   
     newLog.save()
     .then(res.json(newLog))
 })

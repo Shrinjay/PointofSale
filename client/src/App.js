@@ -66,7 +66,7 @@ class App extends React.Component {
     sessionStorage.setItem('JWT', JWT);
     sessionStorage.setItem('orgName', orgName)
     this.setState({accessString: sessionStorage.getItem('JWT'), orgName: orgName}, function() {
-      console.log(this.state.accessString)
+ 
       this.getState();
       this.getLog();
     }) 
@@ -76,7 +76,7 @@ class App extends React.Component {
     let response = await axios.get('/api/log/', {headers: {
         Authorization: this.state.accessString
     }})
-    console.log(response)
+   
     this.setState({logs: response.data})
 }
 
