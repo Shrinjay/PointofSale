@@ -99,6 +99,7 @@ componentDidMount(){
   
   render (){ 
   {console.log(process.env.PRIVATE_KEY)}
+  {console.log(process.env.MONGO_URI)}
     return (
     <div className="App">
       <MyNavbar token={this.state.accessString} updateOrg={this.logOut}/>
