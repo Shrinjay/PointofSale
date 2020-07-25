@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
-import {Button, Jumbotron, Container, Row, Col, Alert} from 'reactstrap';
+import {Button, Jumbotron, Container, Row, Col, Alert, Form, Input} from 'reactstrap';
 
 class sellDisplay extends React.Component{
     constructor(props){
@@ -9,6 +9,7 @@ class sellDisplay extends React.Component{
         this.state={
             toSell: this.props.toSell
         }
+       
     }
 
     
@@ -40,12 +41,37 @@ export default class MainInput extends React.Component{
             invalidTrans: false,
         }
         this.clickItem = this.clickItem.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.cancelTrans = this.cancelTrans.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
+
+    
+
+    handleChange(event){
+        let sellCopy = this.state.toSell
+        let index = this.state.toSell.findIndex(element=> element.name==event.target.id)
+        let oldQuant = sellCopy[index].amountSold
+        sellCopy[index].amountSold=event.target.value
+        let newTotal = this.state.totalPrice + (sellCopy[index].price * (event.target.value-oldQuant))
+        this.setState({toSell: sellCopy, totalPrice: newTotal})
+    }
+
+        removeItem(event) {
+            let sellCopy = this.state.toSell
+            let index = sellCopy.findIndex(element => element.name==event.target.id)
+            let newTotal = this.state.totalPrice - (sellCopy[index].price * sellCopy[index].amountSold)
+            this.setState({toSell: sellCopy.filter(element => element.name!=event.target.id), totalPrice: newTotal})
+        }
+
+        cancelTrans() {
+            this.setState({toSell: [], totalPrice: 0})
+        }
 
           renderButtons(){
               return this.props.items.map(item => 
                 <span>
-             <Button  onClick={this.clickItem} id={item.name}>{item.name}</Button>
+             <Button  onClick={this.clickItem} id={item.name} style={{margin: "1px"}}>{item.name}</Button>
              </span>
               )
           }
@@ -109,9 +135,12 @@ export default class MainInput extends React.Component{
                            
                            /*NEXT STEP: Find how to reconcile a change in state with updating the database*/
                         }
+                       if (this.state.invalidTrans==false)
+                       {
                         this.updateTLog(this.state.transactionNo)
                         this.props.getState()
                         this.setState({toSell: [], totalPrice: 0})
+                       }
                     
                     }
                 }
@@ -127,7 +156,7 @@ export default class MainInput extends React.Component{
                 else{
                    
                     var soldItem = {
-                        id: found._id,
+                       
                         name: found.name,
                         price: found.price,
                         amountSold: 1
@@ -146,10 +175,15 @@ export default class MainInput extends React.Component{
                         {element.name}
                         </Col>
                         <Col>
-                        {element.amountSold}
+                        <Form>
+                            <Input type="number" id={element.name} value={element.amountSold} onChange={this.handleChange}/>
+                        </Form>
                         </Col>
                         <Col>
                            ${element.price}
+                        </Col>
+                        <Col>
+                            <Button color="danger" id={element.name} onClick={this.removeItem}>Delete</Button>
                         </Col>
                         <br />
                         </Row>
@@ -177,11 +211,12 @@ export default class MainInput extends React.Component{
                     <b>Item</b>
                     </Col>
                     <Col>
-                    
+                   <b> Quantity Sold</b>
                     </Col>
                     <Col>
-                    <b>Price</b>
+                    <b>Unit Price</b>
                     </Col>
+                    <Col></Col>
                 </Row>
             {this.renderSell()}
             <br />
@@ -193,6 +228,7 @@ export default class MainInput extends React.Component{
                 <Col>
                 ${this.state.totalPrice}
                 </Col>
+                <Col></Col>
             </Row>
             </Container>
         </Jumbotron>
@@ -200,7 +236,8 @@ export default class MainInput extends React.Component{
         </Container>
         {this.renderButtons()}
         <br /><br />
-        <Button color="success" id="sell" onClick={this.clickItem}>Sell</Button>
+        <Button color="success" id="sell" style={{margin: "1px"}} onClick={this.clickItem}>Sell</Button>
+        <Button color="danger" id="cancel" style={{margin: "1px"}} onClick={this.cancelTrans}>Cancel</Button>
         </div>
         )
     }
