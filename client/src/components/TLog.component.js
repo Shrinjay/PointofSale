@@ -6,12 +6,15 @@ export default class DisplayLog extends React.Component {
         super();
       
     }
+    
     displayLog(){
+       
            let size = this.props.logs.length;
+           
             return this.props.logs.slice(size-4).map(element => 
                 <tr>
                 <td>
-                    {element.date}
+                    {element.date} 
                 </td>
                 <td>
                     

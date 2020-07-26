@@ -11,7 +11,7 @@ import DisplayLog from './components/TLog.component'
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import LogIn from './components/logIn.component';
 import Register from './components/Registration.component'
-
+import StatsView from './components/Stats.component'
 import {Container, Row, Col, Button, Alert} from 'reactstrap';
 
 
@@ -87,11 +87,12 @@ register() {
 } 
 
 
-componentDidMount(){
+async componentDidMount(){
  
   this.getState()
   this.getLog()
-  
+
+ 
   }
 
 
@@ -133,6 +134,9 @@ componentDidMount(){
           <Update token={this.state.accessString} orgName={this.state.orgName } items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
         </Route>
       </Switch>
+      <Route exact path='/stats/' component={App}>
+        <StatsView token={this.state.accessString} />
+      </Route>
       </Router>
         
     </div>

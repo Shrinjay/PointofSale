@@ -75,6 +75,7 @@
                 pass: this.state.pass
             })
             this.props.updateOrg(loginResponse.data.JWT, loginResponse.data.orgName)
+            window.location.replace('/modify')
         }  
     }
 

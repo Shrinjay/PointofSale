@@ -31,6 +31,8 @@ app.use('/api/items', passport.authenticate('jwt', {session: false}), itemRouter
 const tLogRouter = require('./transactionLog')
 app.use('/api/log', passport.authenticate('jwt', {session: false}), tLogRouter);
 
+const statsRouter = require('./Statistics')
+app.use('/api/statistics', passport.authenticate('jwt', {session: false}), statsRouter);
 
 const userRouter = require('./users')
 app.use('/api/users/', userRouter);

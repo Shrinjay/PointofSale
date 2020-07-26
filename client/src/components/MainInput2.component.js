@@ -90,7 +90,8 @@ export default class MainInput extends React.Component{
             updatedTransactions.total=this.state.totalPrice;
 
             let transDate = new Date()
-            transDate = transDate.toString();
+            transDate = transDate.toString()
+            
             updatedTransactions.date=transDate;
 
             this.setState(prevState=>({transactions: [...prevState.transactions, updatedTransactions]}))
