@@ -107,12 +107,12 @@ export default class MainInput extends React.Component{
             
           }
 
-          async clickItem(event){
+          clickItem(event){
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
                   
-                    if (this.state.toSell.length==0)
+                    if (this.state.toSell.length==0 )
                     {
                         this.setState({failure: true})
                         return;
@@ -123,18 +123,25 @@ export default class MainInput extends React.Component{
 
                         for(var i=0; i<this.state.toSell.length; i++)
                         {   
-                            let response = await axios.put('/api/items/sell', {
+                            if (this.state.toSell[i].amountSold==0)
+                            {
+                                this.setState({failure: true})
+                                return
+                            }
+
+                            axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
                     
                             }, {headers: {Authorization: this.props.token}})
-                            if (response.data=="Excess sold")
-                            {
-                                this.setState({invalidTrans: this.state.toSell[i].name})
-                                break
-                            }
+                            .then(response => {
+                                if (response.data=="Excess sold")
+                                {
+                                    this.setState({invalidTrans: this.state.toSell[i].name})
+                                    return
+                                }
+                            })
                            
-                           /*NEXT STEP: Find how to reconcile a change in state with updating the database*/
                         }
                        if (this.state.invalidTrans==false)
                        {

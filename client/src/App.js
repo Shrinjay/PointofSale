@@ -72,12 +72,12 @@ class App extends React.Component {
     }) 
   }
 
-  async getLog(){
-    let response = await axios.get('/api/log/', {headers: {
+  getLog(){
+    axios.get('/api/log/', {headers: {
         Authorization: this.state.accessString
     }})
-   
-    this.setState({logs: response.data})
+   .then(response => this.setState({logs: response.data}))
+    
 }
 
 

@@ -25,18 +25,18 @@ export default class Update extends React.Component{
                 <td><Button id={element.name} onClick={this.deleteItem}>Delete</Button></td>
             </tr>)
     }
-   async handleChange(event){
+   handleChange(event){
        if (event.target.name=='inventory'){
         let id = event.target.id //Can I use documentGetElementByID here as well? 
         let updatedState = this.props.items
         let index = updatedState.findIndex(element => element.name==id)
         updatedState[index].inventory=document.getElementById(id).valueAsNumber
         this.props.updateState(updatedState);
-        let response = await Axios.put('/api/items/update',{
+        Axios.put('/api/items/update',{
             name: updatedState[index].name, 
             newInventory: updatedState[index].inventory
         }, {headers: {Authorization: this.props.token}})
-        return response;
+        .then((response)=> {return response})
     }
     let updatedStateAdd=this.state.toAdd
     if (event.target.name=='inputName'){
@@ -59,31 +59,37 @@ export default class Update extends React.Component{
 
    
 
-  async addItem(){
+  addItem(){
       this.setState({failedAdd: false})
       if (this.state.toAdd.name==null || this.state.toAdd.inventory==null || this.state.toAdd.inventory==null)
       {
             this.setState({failedAdd: true})
             return
       }
-        let response = await Axios.post('/api/items/add', {
+        Axios.post('/api/items/add', {
             name: this.state.toAdd.name,
             inventory: this.state.toAdd.inventory, 
             price: this.state.toAdd.price
         }, {headers: {
             Authorization: this.props.token
-        }})
-        this.props.getState();
-        return response;
+        }}).then((response)=> {
+            this.props.getState();
+            return response;
+        })
+       
     }
 
-    async deleteItem(event){
-        let response = await Axios.delete('/api/items/delete', {
+    deleteItem(event){
+        Axios.delete('/api/items/delete', {
            data:{ name: event.target.id},
            headers: {Authorization: this.props.token}
-        }).catch((error)=>console.log(error))
-        this.props.getState();
-        return response;
+        })
+        .then((response)=>{
+            this.props.getState();
+            return response;
+        })
+        .catch((error)=>console.log(error))
+       
 
     }
 

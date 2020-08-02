@@ -13,15 +13,18 @@ export default class Stats extends React.Component{
         this.getData = this.getData.bind(this)
     }
 
-    async getData() {
-        let responseSales = await axios.get('/api/statistics/sales/', {headers: {
+ getData() {
+        let responseSales = axios.get('/api/statistics/sales/', {headers: {
             Authorization: this.props.token
         }})
-        let responseChange = await  axios.get('/api/statistics/change/', {headers: {
+        let responseChange = axios.get('/api/statistics/change/', {headers: {
             Authorization: this.props.token
         }})
-        console.log(responseChange.data)
-        this.setState({totalSalesToday: responseSales.data, percentChange: responseChange.data}, function() {console.log(this.state.totalSalesToday)})
+        
+        Promise.all([responseChange, responseSales]).then((values)=> {
+            this.setState({totalSalesToday: values[1].data, percentChange: values[0].data})
+        })
+     
     }
 
     componentDidMount(){

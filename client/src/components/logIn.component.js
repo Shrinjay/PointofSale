@@ -56,19 +56,21 @@ export default class LogIn extends React.Component{
         this.setState({failedAuth: true})
         return
     }
-        let response = await axios.post('/api/users/login/', {
+        axios.post('/api/users/login/', {
             org: this.state.orgName,
             pass: this.state.password
         })
- 
-        if (response.data !=  "")
-        {   
-            this.setState({failedAuth: false})
-            this.props.updateOrg(response.data.JWT, response.data.orgName)
-        }
-        else {
-            this.setState({failedAuth: true})
-        }
+        .then(response => {
+            if (response.data !=  "")
+            {   
+                this.setState({failedAuth: false})
+                this.props.updateOrg(response.data.JWT, response.data.orgName)
+            }
+            else {
+                this.setState({failedAuth: true})
+            }
+        })
+       
     }
 
     render() {
