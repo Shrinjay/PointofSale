@@ -107,7 +107,7 @@ export default class MainInput extends React.Component{
             
           }
 
-          clickItem(event){
+          async clickItem(event){
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
@@ -129,18 +129,18 @@ export default class MainInput extends React.Component{
                                 return
                             }
 
-                            axios.put('/api/items/sell', {
+                            let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
                     
                             }, {headers: {Authorization: this.props.token}})
-                            .then(response => {
+                            
                                 if (response.data=="Excess sold")
-                                {
+                                {   
                                     this.setState({invalidTrans: this.state.toSell[i].name})
                                     return
                                 }
-                            })
+                            
                            
                         }
                        if (this.state.invalidTrans==false)
