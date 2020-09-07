@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
-import {Button, Jumbotron, Container, Row, Col, Alert, Form, Input} from 'reactstrap';
+import {Button, Jumbotron, Container, Row, Col, Alert, Form, Input, Spinner} from 'reactstrap';
 
 class sellDisplay extends React.Component{
     constructor(props){
@@ -39,6 +39,7 @@ export default class MainInput extends React.Component{
               
             }], 
             invalidTrans: false,
+            processing: false
         }
         this.clickItem = this.clickItem.bind(this);
         this.handleChange = this.handleChange.bind(this)
@@ -107,7 +108,7 @@ export default class MainInput extends React.Component{
             
           }
 
-          clickItem(event){
+          async clickItem(event){
                 let id = event.target.id;
                 
                 if (event.target.id=="sell"){
@@ -118,37 +119,35 @@ export default class MainInput extends React.Component{
                         return;
                     } 
                     else {
-                        this.setState({failure: false, invalidTrans: false})
+                        this.setState({failure: false, invalidTrans: false, processing: true})
                         ++this.state.transactionNo                    
 
                         for(var i=0; i<this.state.toSell.length; i++)
                         {   
                             if (this.state.toSell[i].amountSold==0)
                             {
-                                this.setState({failure: true})
-                                return
+                                continue
                             }
 
-                            axios.put('/api/items/sell', {
+                            let response = await axios.put('/api/items/sell', {
                                 item: this.state.toSell[i].name, 
                                 amountSold: this.state.toSell[i].amountSold,
                     
                             }, {headers: {Authorization: this.props.token}})
-                            .then(response => {
-                                if (response.data=="Excess sold")
-                                {
-                                    this.setState({invalidTrans: this.state.toSell[i].name})
-                                    return
-                                }
-                            })
-                           
+                            
+                            if (response.data=="Excess sold")
+                            {
+                                this.setState({invalidTrans: this.state.toSell[i].name, processing: false})
+                                return
+                            }
                         }
                        if (this.state.invalidTrans==false)
                        {
                         this.updateTLog(this.state.transactionNo)
                         this.props.getState()
-                        this.setState({toSell: [], totalPrice: 0})
+                        this.setState({toSell: [], totalPrice: 0, processing: false})
                        }
+                       
                     
                     }
                 }
@@ -244,8 +243,11 @@ export default class MainInput extends React.Component{
         </Container>
         {this.renderButtons()}
         <br /><br />
-        <Button color="success" id="sell" style={{margin: "1px"}} onClick={this.clickItem}>Sell</Button>
+        <Button color="success" id="sell" style={{margin: "1px"}} onClick={this.clickItem}>Complete Transaction</Button>
         <Button color="danger" id="cancel" style={{margin: "1px"}} onClick={this.cancelTrans}>Cancel</Button>
+        <div><br />
+        {this.state.processing ? <Spinner color="primary"></Spinner>: null}
+        </div>
         </div>
         )
     }
