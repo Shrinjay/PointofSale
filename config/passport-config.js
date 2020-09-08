@@ -14,11 +14,11 @@ passport.use('jwt', new JWTStrategy(opts, (jwt_payload, done)=>{
         .then(user => {
             if (user)
             {
-                console.log('valid user')
+                
                 done(null, user)
             }
             else {
-                console.log('invalid user')
+                
                 done(null, false)
             }
         })

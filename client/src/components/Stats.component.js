@@ -1,13 +1,22 @@
 import React from 'react'
 import axios from 'axios'
-import {Jumbotron} from 'reactstrap'
+import {Jumbotron, Spinner, Row, Col} from 'reactstrap'
+import {
+    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label
+  } from 'recharts';
+import CanvasJSReact from '../canvasjs.react'
+
+var CanvasJS = CanvasJSReact.CanvasJS
+var CanvasJSChart = CanvasJSReact.CanvasJSChart
+
+var options
 
 export default class Stats extends React.Component{
     constructor(props)
     {
         super(props);
         this.state={
-            totalSalesToday: 0,
+            Sales: [],
             percentChange: 0,
         }
         this.getData = this.getData.bind(this)
@@ -22,8 +31,19 @@ export default class Stats extends React.Component{
         }})
         
         Promise.all([responseChange, responseSales]).then((values)=> {
-            this.setState({totalSalesToday: values[1].data, percentChange: values[0].data})
+            this.setState({Sales: values[1].data, percentChange: values[0].data}, ()=>{
+                options = {
+                    backgroundColor: null,
+                   
+                    data: [{				
+                              type: "column",
+                              dataPoints: this.state.Sales
+                     }]
+                 }
+                      
+            })
         })
+        
      
     }
 
@@ -33,12 +53,23 @@ export default class Stats extends React.Component{
     }
 
     render()
-    {
+    {   console.log(this.state.Sales)
         return (
+           
             <Jumbotron>
-                <span><h1>Your total sales today:  ${this.state.totalSalesToday}</h1></span>
-                {this.state.percentChange>=0 && <span style={{color: 'green'}}><h1>Your sales grew by {Math.abs(this.state.percentChange)}% from yesterday</h1></span>}
-                {this.state.percentChange<0 && <span style={{color: 'red'}}><h1>Your sales fell by {Math.abs(this.state.percentChange)}% from yesterday</h1></span>}
+                    <Row>
+                    <Col sm={{size: 6}}>
+                    <h2 style={{textAlign: "center"}}>Sales Volume Over Last 5 Days ($)</h2>
+                   {this.state.Sales.length>0 ? 
+                       <CanvasJSChart options={options} /> :<div style={{textAlign: "center"}}><Spinner color="primary" /></div>}
+                  </Col>
+                    <Col sm={{size: 6}}>
+                    <div style={{textAlign: "center"}}>
+                        <h3>Change in Sales Volume: </h3>{this.state.percentChange>=0 && <span style={{color: 'green'}}><h1><b>+{this.state.percentChange}%</b></h1></span>}
+                   {this.state.percentChange<0 && <span style={{color: 'red'}}><h1><b>{this.state.percentChange}%</b></h1></span>}
+                    </div>
+                    </Col>
+                   </Row>
         </Jumbotron>
         )
     }
