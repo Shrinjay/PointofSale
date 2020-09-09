@@ -41,7 +41,8 @@ class App extends React.Component {
     axios.get('/api/items/', {headers: {Authorization: this.state.accessString}}) 
     .then(res => {const response = res.data; 
       this.setState({items: response});
-        }) 
+        })
+    .catch(err => console.log("Error occured: "+err))
   }
 
   //Handle user logout
@@ -71,6 +72,7 @@ class App extends React.Component {
         Authorization: this.state.accessString
     }})
    .then(response => this.setState({logs: response.data}))
+   .catch(err => console.log("Error occured: "+err))
 }
 
 //Set state to register to trigger registration system
