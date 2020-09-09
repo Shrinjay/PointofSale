@@ -31,6 +31,7 @@ export default class Stats extends React.Component{
         }})
         
         Promise.all([responseChange, responseSales]).then((values)=> {
+            console.log(values)
             this.setState({Sales: values[1].data, percentChange: values[0].data}, ()=>{
                 options = {
                     backgroundColor: null,
@@ -53,7 +54,7 @@ export default class Stats extends React.Component{
     }
 
     render()
-    {   console.log(this.state.Sales)
+    {   
         return (
            
             <Jumbotron>

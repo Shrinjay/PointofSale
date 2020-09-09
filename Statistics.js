@@ -1,3 +1,4 @@
+//Requirements
 const express = require ('express')
 const router = express.Router()
 const tLog = require('./transactionLogModel')
@@ -5,6 +6,7 @@ const { response } = require('express')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+//Variables
 var todaysTotal = 0;
 let todaysDate = new Date()
 let day2 = new Date()
@@ -12,7 +14,7 @@ let day3 = new Date()
 let day4 = new Date()
 let day5 = new Date()
 
-    
+//Calculate total for a given day
 function calculateTotal(trans, date) {
     let dateString = date.toDateString()
     let total = 0;
@@ -28,12 +30,13 @@ function calculateTotal(trans, date) {
     return total
 }
 
-
+//Calculate percent change between two values
 function percentChange(newValue, oldValue) {
     let change = Math.round(((newValue-oldValue)/oldValue) * 100)
     return change
 }
 
+//Get sales for last 5 days
 router.route('/sales').get((req, res)=>{
     let sales = []
     day2.setDate(todaysDate.getDate()-1)
@@ -64,9 +67,11 @@ router.route('/sales').get((req, res)=>{
             y: calculateTotal(trans, todaysDate)})
     
         res.json(sales)
-})
+        })
+    .catch(err => res.send(err))
 })
 
+//Get percent change in sales from last day
 router.route('/change').get((req, res)=>{
     let yesterday = new Date()
     yesterday.setDate(todaysDate.getDate() - 1)
@@ -78,8 +83,10 @@ router.route('/change').get((req, res)=>{
         yesterdayTotal = calculateTotal(trans, yesterday)
         res.json(percentChange(todaysTotal, yesterdayTotal))
     })
+    .catch(err => res.send(err))
 })
 
+//IN PROGRESS: Get Top 5 Items by Sales Volume. 
 router.route('/topitems').get((req, res)=>{
     
     let count = {}
@@ -96,12 +103,10 @@ router.route('/topitems').get((req, res)=>{
                     count[item] += 1
                 }
             })
-
-            
         })
-        
         res.json(count)
     })
+    .catch(err => res.send(err))
 })
 
 module.exports = router

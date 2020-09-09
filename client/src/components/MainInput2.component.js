@@ -3,25 +3,6 @@ import axios from 'axios';
 import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
 import {Button, Jumbotron, Container, Row, Col, Alert, Form, Input, Spinner} from 'reactstrap';
 
-class sellDisplay extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            toSell: this.props.toSell
-        }
-       
-    }
-
-    
-
-    render(){
-        return (
-            <Jumbotron>
-                {this.renderSell()}
-            </Jumbotron>
-        )
-    }
-}
 
 export default class MainInput extends React.Component{
     constructor(props) {
