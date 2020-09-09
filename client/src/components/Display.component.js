@@ -13,14 +13,14 @@ export default class Display extends React.Component{
   }
   
   //Maps over inventory and creates table row for each one.
-  tableData() { 
-      return this.props.items.map(item =>  
-          <tr> 
-              <td>{item.name}</td> 
+tableData() { 
+  return this.props.items.map(item =>  
+     <tr> 
+      <td>{item.name}</td> 
       <td>${item.price}.00</td>
       <td>{item.inventory} units</td>
-          </tr>
-      );
+    </tr>
+      )
   }
 
   render(){
