@@ -112,6 +112,7 @@ router.route('/delete').delete((req, res)=>{
           res.send('Success') 
           }
     })
+    .catch(err => res.send(err))
 })
 
 

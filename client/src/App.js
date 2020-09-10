@@ -12,7 +12,8 @@ import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import LogIn from './components/logIn.component';
 import Register from './components/Registration.component'
 import StatsView from './components/Stats.component'
-import {Container, Row, Col, Button, Alert} from 'reactstrap';
+import {Container, Row, Col, Button, Alert, Spinner} from 'reactstrap';
+import { session } from 'passport';
 
 //Class-based app component
 class App extends React.Component {
@@ -22,10 +23,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
+      items: sessionStorage.getItem('inventory')=='null' ? []:JSON.parse(sessionStorage.getItem('inventory')),
       accessString: sessionStorage.getItem('JWT'),
       orgName: sessionStorage.getItem('orgName'),
-      logs: []
+      logs: sessionStorage.getItem('logs')=='null' ? []:JSON.parse(sessionStorage.getItem('logs'))
     }
   
     this.getState = this.getState.bind(this)
@@ -36,11 +37,16 @@ class App extends React.Component {
     this.getLog = this.getLog.bind(this)
   }
 
-  //Get inventory data and save to state
-  getState(){
+  //Get inventory data and save to state. Triggered at mount, updates if either it is forced to by paramter update or if inventory length has changed with a new item.
+  getState(update){
     axios.get('/api/items/', {headers: {Authorization: this.state.accessString}}) 
     .then(res => {const response = res.data; 
-      this.setState({items: response});
+        if (this.state.items==null || (this.state.items!=null && res.data.length!=this.state.items.length) || update)
+        {
+          this.setState({items: response});
+          sessionStorage.setItem('inventory', JSON.stringify(response))
+        }
+        else return
         })
     .catch(err => console.log("Error occured: "+err))
   }
@@ -49,6 +55,8 @@ class App extends React.Component {
   logOut() {
     sessionStorage.clear()
     this.setState({accessString: null, orgName: null, items: [], logs: []})
+    sessionStorage.setItem('inventory', null)
+    sessionStorage.setItem('logs', null)
   }
 
   //Update Inventory
@@ -61,27 +69,35 @@ class App extends React.Component {
     sessionStorage.setItem('JWT', JWT);
     sessionStorage.setItem('orgName', orgName)
     this.setState({accessString: sessionStorage.getItem('JWT'), orgName: orgName}, function() {
-      this.getState();
-      this.getLog();
+      this.getState(true);
+      this.getLog(true);
     }) 
   }
 
-  //Get transaction logs
-  getLog(){
+  //Get transaction logs and checks for difference, if different, a transaction occured so it forces inventory to update by setting the paramater update to true
+  getLog(update){
     axios.get('/api/log/', {headers: {
         Authorization: this.state.accessString
     }})
-   .then(response => this.setState({logs: response.data}))
+   .then(response => { 
+    if (this.state.logs== null || (this.state.logs!=null && response.data.length!=this.state.logs.length) || update)
+    {
+      this.setState({logs: response.data})
+      sessionStorage.setItem('logs', JSON.stringify(response.data))
+      this.getState(true)
+    }
+    else return
+  })
    .catch(err => console.log("Error occured: "+err))
 }
 
 //Set state to register to trigger registration system
 register() {this.setState({accessString: "register"})}
 
-//Get inventory and transaction logs when component mounts
+//Get inventory and transaction logs when component mounts. Doesn't force inventory to update
 componentDidMount(){
-  this.getState()
-  this.getLog()
+  this.getState(false)
+  this.getLog(false)
   }
 
   render (){ 
@@ -101,7 +117,7 @@ componentDidMount(){
   <Router>
     {/*Home page route*/}
     <Route exact path="/" component={App}>
-         <Container fluid={true}>
+         {this.state.items!=null && this.state.logs!=null ? <Container fluid={true}>
            <Row>
              <Col sm="6">
              <Display token={this.state.accessString} items={this.state.items}/> {/*Just renders the display component*/}
@@ -114,23 +130,23 @@ componentDidMount(){
             <Col sm={{offset: 3, size: 3}}> <Button color="primary" size="lg" href="/sell" block><br /><h2>Sell Items</h2><br /></Button></Col>
             <Col sm={{ size: 3}}> <Button color="primary" size="lg" href="/modify" block><br /><h3>Add/Update Inventory</h3><br /></Button></Col>
            </Row>
-         </Container>
+         </Container>: <Spinner color="primary" />}
     </Route>
 
         {/*Sell Items Route*/}
        <Route exact path="/sell/" component={App}>
-       <MainInput token={this.state.accessString} getState={this.getState} items={this.state.items}/>
+       {this.state.items!=null ? <MainInput token={this.state.accessString} getState={this.getState} items={this.state.items}/>: <Spinner color="primary"/>}
         </Route>
 
         {/*Modify Inventory Route*/}
         <Route exact path="/modify/" component={App}>
-          <Update token={this.state.accessString} items={this.state.items} getState={this.getState} updateState={this.updateItems}/>
+          {this.state.items!=null ? <Update token={this.state.accessString} items={this.state.items} getState={this.getState} updateState={this.updateItems}/>: <Spinner color="primary"/>}
         </Route>
       
       {/*View Statistics Route*/}
-      <Route exact path='/stats/' component={App}>
+      {this.state.items!=null ? <Route exact path='/stats/' component={App}>
         <StatsView token={this.state.accessString} />
-      </Route>
+      </Route>: <Spinner color="primary"/>}
        
   </Router>
     </div>
