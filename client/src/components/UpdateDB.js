@@ -2,6 +2,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, Jumbotron, Table, Label, Input, Alert } from 'reactstrap';
 import Axios from 'axios';
+import { session } from 'passport';
 
 //Component allows user to update inventory.
 export default class Update extends React.Component {
@@ -36,11 +37,12 @@ export default class Update extends React.Component {
         let index = updatedState.findIndex(element => element.name == id)
         updatedState[index].inventory = document.getElementById(id).valueAsNumber
         this.props.updateState(updatedState);
+        sessionStorage.setItem('inventory', JSON.stringify(updatedState))
         Axios.put('/api/items/update', {
             name: updatedState[index].name,
             newInventory: updatedState[index].inventory
         }, { headers: { Authorization: this.props.token } })
-            .then((response) => { return response })
+            .then((response) => { console.log(response) })
             .catch(err => console.log(err))
     }
 
