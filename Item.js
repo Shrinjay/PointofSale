@@ -108,7 +108,6 @@ router.route('/delete').delete((req, res)=>{
               res.send('undef');
           }
           else {
-          data.save();
           res.send('Success') 
           }
     })
