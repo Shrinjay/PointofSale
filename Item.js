@@ -61,7 +61,7 @@ router.route('/sell').put((req, res)=>{
         //Set new inventory
         found.inventory = found.inventory - amountSold
         //Check if new inventory exceeds amount sold.
-        if (found.inventory<amountSold)
+        if (found.inventory<0)
         {
             res.send('Excess sold')
             return

@@ -127,9 +127,10 @@ componentDidMount(){
              </Col>
            </Row>
            <Row>
-            <Col sm={{offset: 3, size: 3}}> <Button color="primary" size="lg" href="/sell" block><br /><h2>Sell Items</h2><br /></Button></Col>
-            <Col sm={{ size: 3}}> <Button color="primary" size="lg" href="/modify" block><br /><h3>Add/Update Inventory</h3><br /></Button></Col>
+            <Col sm={{offset: 3, size: 3}}> <Button color="primary" size="lg" href="/sell" block auto><span style={{fontSize: '3vw', textAlign: "center"}}>Sell Items</span><br /></Button></Col>
+            <Col sm={{ size: 3}}> <Button color="primary" size="lg" href="/modify" block><span style={{fontSize: '3vw'}}>Inventory</span><br /></Button></Col>
            </Row>
+           <br />
          </Container>: <Spinner color="primary" />}
     </Route>
 
