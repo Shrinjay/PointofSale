@@ -47,6 +47,7 @@ export default class Registration extends React.Component {
     async register() {
         if (this.state.pass != this.state.passConfirm) {
             this.setState({ mismatch: true })
+            return
         }
         if (this.state.org == null) {
             this.setState({ failedUser: true })
