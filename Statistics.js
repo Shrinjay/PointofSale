@@ -81,6 +81,7 @@ router.route('/change').get((req, res)=>{
     .then(trans => {
         todaysTotal = calculateTotal(trans, todaysDate)
         yesterdayTotal = calculateTotal(trans, yesterday)
+        if (yesterdayTotal==0) yesterdayTotal=0.01
         res.json(percentChange(todaysTotal, yesterdayTotal))
     })
     .catch(err => res.send(err))
