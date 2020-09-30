@@ -17,7 +17,7 @@ tableData() {
   return this.props.items.map(item =>  
      <tr> 
       <td>{item.name}</td> 
-      <td>${item.price}.00</td>
+      <td>${item.price}</td>
       <td>{item.inventory} units</td>
     </tr>
       )

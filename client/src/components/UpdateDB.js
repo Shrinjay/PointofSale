@@ -137,7 +137,6 @@ export default class Update extends React.Component {
                                 <Input onChange={this.handleChange} type="text" name="inputName" id="inputName" />
                             </Col>
                         </Row>
-
                         <Row>
                             <Col md={{ size: 3, offset: 3 }}>
                                 <Label for="inputInventory">Current Inventory:</Label>
@@ -145,7 +144,7 @@ export default class Update extends React.Component {
                             </Col>
                             <Col md={{ size: 3 }}>
                                 <Label for="inputPrice">Item Price:</Label>
-                                <Input onChange={this.handleChange} type="number" name="inputPrice" id="inputPrice" />
+                                <Input onChange={this.handleChange} type="number" step="0.01" name="inputPrice" id="inputPrice" />
                             </Col>
                         </Row>
                         <br />

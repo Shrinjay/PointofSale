@@ -7,7 +7,7 @@ let Item = require('./itemModel');  //Imports the Item Model from itemModel.js
 const { ExtractJwt } = require('passport-jwt');
 
 //Handle requests to get inventory.
-router.route('/').get((req, res)=>{ //Handles any GET requests to the / route
+router.route('/').get((req, res)=>{ 
     Item.find({org: jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)}) //Uses the find command, finding anything that's in the database with no filter. Note, no err or data query here, FIND OUT WHY
     .then(items => 
         res.json(items)) //then defines what find() returns as items as sends items as a json object
@@ -103,13 +103,7 @@ router.route('/delete').delete((req, res)=>{
     const name = req.body.name
     const reqOrg = jwt.verify(req.header('Authorization').split(' ')[1], process.env.PRIVATE_KEY)
     Item.findOneAndDelete({name: name, org: reqOrg}, (err, data)=>{
-        if (typeof data=='undefined')
-          {  
-              res.send('undef');
-          }
-          else {
           res.send('Success') 
-          }
     })
     .catch(err => res.send(err))
 })

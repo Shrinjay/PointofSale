@@ -9,8 +9,8 @@ export default class LogIn extends React.Component{
     {
         super(props)
         this.state={
-            orgName: "",
-            password: "",
+            orgName: null,
+            password: null,
             failedAuth: false,
         }
         this.checkCreds = this.checkCreds.bind(this)
@@ -19,14 +19,8 @@ export default class LogIn extends React.Component{
 
     //HandleChange updates internal state from forms.
     handleChange(event){
-        if(event.target.id=="orgName")
-        {
-            this.setState({orgName: event.target.value})
-        }
-        if (event.target.id=="orgPass")
-        {
-            this.setState({password: event.target.value})
-        }
+        if(event.target.id=="orgName") this.setState({orgName: event.target.value})
+        if (event.target.id=="orgPass") this.setState({password: event.target.value})
     }
 
     //Sends an API request toi verify the request, and set JWT tokens if correct.
@@ -37,21 +31,20 @@ export default class LogIn extends React.Component{
         this.setState({failedAuth: true})
         return
     }
-        axios.post('/api/users/login/', {
-            org: this.state.orgName,
-            pass: this.state.password
-        })
-        .then(response => {
-            if (response.data !=  "")
-            {   
-                this.setState({failedAuth: false})
-                this.props.updateOrg(response.data.JWT, response.data.orgName)
-            }
-            else {
-                this.setState({failedAuth: true})
-            }
-        })
-       
+    axios.post('/api/users/login/', {
+        org: this.state.orgName,
+        pass: this.state.password
+    })
+    .then(response => {
+        if (response.data !=  "")
+        {   
+            this.setState({failedAuth: false})
+            this.props.updateOrg(response.data.JWT, response.data.orgName)
+        }
+        else {
+            this.setState({failedAuth: true})
+        }
+    })    
     }
 
     render() {

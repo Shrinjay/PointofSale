@@ -11,10 +11,8 @@ router.route('/login').post((req, res)=>{
     let pass = req.body.pass
     User.findOne( {orgName: org}, async (error, found)=>{ /*Eventually, add a feature here where it differentaties between the user not existing and the password being wrong*/
         //If user doesn't exist
-        if (!found)
-        {   
-            res.send(null)
-        }
+        if (!found) res.send(null)
+        
         else { 
         //Decrypt password in db and compare
         bcrypt.compare(pass, found.password, (err, result) => {
